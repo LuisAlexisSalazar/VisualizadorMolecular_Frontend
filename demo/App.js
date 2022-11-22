@@ -28,15 +28,25 @@ export default class App extends Component {
             events: [],
             string1: '',
             string2: '',
-            value: dataset0,
-            type_algorithm: 'global'
+            string3: '',
+            string4: '',
+            string5: '',
+            amountInputsExtra: 0,
+            value: [dataset0],
+            type_algorithm: 'global',
+            backtracking: false,
         };
         this.setProps = this.setProps.bind(this);
         this.handleDataChange = this.handleDataChange.bind(this);
         this.handlePlotChange = this.handlePlotChange.bind(this);
         this.updateValue1 = this.updateValue1.bind(this);
         this.updateValue2 = this.updateValue2.bind(this);
+        this.updateValue3 = this.updateValue3.bind(this);
+        this.updateValue4 = this.updateValue4.bind(this);
+        this.updateValue5 = this.updateValue5.bind(this);
         this.onExecute = this.onExecute.bind(this);
+        this.addInput = this.addInput.bind(this);
+        this.onChangeFlagBacktracking = this.onChangeFlagBacktracking.bind(this);
     }
 
     setProps(newProps) {
@@ -58,54 +68,98 @@ export default class App extends Component {
     onExecute() {
         const baseURL = "http://127.0.0.1:8000/"
         let extend_url = "";
-
+        let data_to_send = {
+            string1: this.state.string1,
+            string2: this.state.string2,
+        };
+        const {
+            string1,
+            string2,
+            string3,
+            string4,
+            string5,
+            type_algorithm
+        } = this.state;
+        const array_strings = []
+        array_strings.push(string1)
+        array_strings.push(string2)
+        array_strings.push(string3)
+        array_strings.push(string4)
+        array_strings.push(string5)
+        const array_strings_filter = array_strings.filter(s => s !== "");
         switch (this.state.type_algorithm) {
             case 'global':
                 extend_url = "api/global/";
+                data_to_send.backtracking = this.state.backtracking
                 break;
             case 'local':
                 extend_url = "api/local/";
+
+                break;
+            case 'star':
+                extend_url = "api/star/";
+                // eslint-disable-next-line no-const-assign
+                data_to_send = {strings: array_strings_filter};
                 break;
             default:
                 break;
         }
         // ?Si funciona el formato si lo unimos con el salto de linea
-        // const try_var = ">S1\nACCCT\n>S2\nAGT-\n>S3\nAG-T";
+        // const try_var = [">S1\nACCCT\n>S2\nAGT-",">S3\nAG-T\nS4\nAGT-"];
         // console.log(try_var);
         // this.setState({valueFasta: try_var});
-        const data_to_send = {
-            string1: this.state.string1,
-            string2: this.state.string2,
-            backtracking: true
-        };
-        let result_in_format_fast = "";
+        // const data_to_send = {
+        //     string1: this.state.string1,
+        //     string2: this.state.string2,
+        //     backtracking: this.state.backtracking
+        // };
+        // console.log(data_to_send)
+        const result_in_format_fast = [];
         // const {responseData}
         axios.post(baseURL + extend_url, data_to_send).then(
             res => {
                 const alignments = res.data.alignments;
-                if (this.state.type_algorithm === "global") {
+                if (type_algorithm === "global") {
                     let index = 0
+
                     for (const alig of alignments) {
+                        let pair_aligment = ""
+                        // let pair_aligment = []
                         for (const a of alig) {
-                            result_in_format_fast += ">S" + index.toString() + "\n";
-                            result_in_format_fast += a + "\n";
-                            index += 1
+                            pair_aligment += ">S" + index.toString() + "\n";
+                            pair_aligment += a + "\n";
+                            index += 1;
                         }
+                        result_in_format_fast.push(pair_aligment)
                     }
                     // eslint-disable-next-line eqeqeq
-                } else if (this.state.type_algorithm == "local") {
+                } else if (type_algorithm === "local") {
                     let index = 0
+                    let subsequence = ""
                     for (const alig of alignments) {
 
-                        result_in_format_fast += ">S" + index.toString() + "\n";
-                        result_in_format_fast += alig + "\n";
+                        subsequence += ">S" + index.toString() + "\n";
+                        subsequence += alig + "\n";
                         index += 1
-
                     }
-                }
+                    result_in_format_fast.push(subsequence)
 
-                console.log(result_in_format_fast);
+                }
+                else if (type_algorithm==="star"){
+                    // console.log(res.data)
+                    let index = 0
+                    let subsequence = ""
+                    for (const alig of alignments) {
+
+                        subsequence += ">S" + index.toString() + "\n";
+                        subsequence += alig + "\n";
+                        index += 1
+                    }
+                    result_in_format_fast.push(subsequence)
+                }
                 this.setState({value: result_in_format_fast});
+                // console.log(result_in_format_fast);
+                // this.setState({value: result_in_format_fast});
             }
         )
 
@@ -119,10 +173,46 @@ export default class App extends Component {
     updateValue2(event) {
         this.setState({string2: event.target.value});
     }
-    // ? Ejemplos de pruebas  ATAGACGACAT TTTAGCATGCGCAT
-    render() {
-        const {type_algorithm, events, string1, string2, value} = this.state;
 
+    updateValue3(event) {
+        this.setState({string3: event.target.value});
+    }
+
+    updateValue4(event) {
+        this.setState({string4: event.target.value});
+    }
+
+    updateValue5(event) {
+        this.setState({string5: event.target.value});
+    }
+
+    addInput() {
+        const amount = this.state.amountInputsExtra;
+        if (amount !== 3) {
+            this.setState({amountInputsExtra: amount + 1});
+        }
+    }
+
+    // ? Ejemplos de pruebas  ATAGACGACAT TTTAGCATGCGCAT
+
+    onChangeFlagBacktracking() {
+        this.setState({backtracking: !this.state.backtracking});
+    }
+
+
+    render() {
+        const {
+            type_algorithm,
+            events,
+            string1,
+            string2,
+            string3,
+            string4,
+            string5,
+            value,
+            backtracking,
+            amountInputsExtra
+        } = this.state;
         return (
             <div
                 style={{
@@ -145,9 +235,43 @@ export default class App extends Component {
                     <select value={type_algorithm} onChange={this.handleDataChange}>
                         <option value="global">Algoritmo Global</option>
                         <option value="local">Algoritmo Local</option>
+                        <option value="star">Algoritmo Star</option>
                     </select>
                     <input type="text" placeholder="Ingrese entrada 1" value={string1} onChange={this.updateValue1}/>
                     <input type="text" placeholder="Ingrese entrada 2" value={string2} onChange={this.updateValue2}/>
+                    {type_algorithm === "star" && <button onClick={this.addInput}>
+                        Añadir Input
+                    </button>
+                    }
+                    {amountInputsExtra === 1 &&
+                    <input type="text" placeholder="Ingrese entrada 3" value={string3} onChange={this.updateValue3}/>
+                    }
+                    {amountInputsExtra === 2 &&
+                    <div>
+                        <input type="text" placeholder="Ingrese entrada 3" value={string3}
+                               onChange={this.updateValue3}/>
+                        <input type="text" placeholder="Ingrese entrada 4" value={string4}
+                               onChange={this.updateValue4}/>
+                    </div>
+                    }
+                    {amountInputsExtra === 3 &&
+                    <div>
+                        <input type="text" placeholder="Ingrese entrada 3" value={string3}
+                               onChange={this.updateValue3}/>
+                        <input type="text" placeholder="Ingrese entrada 4" value={string4}
+                               onChange={this.updateValue4}/>
+                        <input type="text" placeholder="Ingrese entrada 5" value={string5}
+                               onChange={this.updateValue5}/>
+                    </div>}
+
+                    {/* eslint-disable-next-line eqeqeq */}
+                    {type_algorithm === "global" && <label>
+                        <input type="checkbox" checked={backtracking} onChange={this.onChangeFlagBacktracking}/>
+                        Backtracking
+                    </label>
+
+                    }
+
                     <button
                         onClick={this.onExecute}
                         // disabled={!searchText.length}
@@ -156,12 +280,22 @@ export default class App extends Component {
                     </button>
                 </div>
                 <div>
+                    {/* eslint-disable-next-line no-unused-vars */}
+                    {value.map((item, index) => {
+                        return <AlignmentViewer
+                            data={item}
+                            extension='fasta'
+                            onChange={this.handlePlotChange}
+                        />
+                    })}
+                    {/* eslint-disable-next-line no-inline-comments */}
+                    {/*
                     <AlignmentViewer
-                        // data={DATA[value]}
                         data={value}
                         extension='fasta'
                         onChange={this.handlePlotChange}
                     />
+                    */}
                 </div>
                 <div
                     style={{
@@ -187,4 +321,5 @@ export default class App extends Component {
             </div>
         );
     }
+
 }

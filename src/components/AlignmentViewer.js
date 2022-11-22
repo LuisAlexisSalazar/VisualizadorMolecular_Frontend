@@ -1,10 +1,10 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 
 import AlignmentChart from './AlignmentChart';
-import { DropdownSelect } from './Components';
-import { getVisualizations } from './charting';
-import { VISUALIZATION_OPTIONS, OVERVIEW_OPTIONS, COLORSCALE_OPTIONS } from './options';
+import {DropdownSelect} from './Components';
+import {getVisualizations} from './charting';
+import {VISUALIZATION_OPTIONS, OVERVIEW_OPTIONS, COLORSCALE_OPTIONS} from './options';
 
 
 /**
@@ -28,20 +28,20 @@ export default class AlignmentViewer extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            overview: { value: 'heatmap', label: 'Heatmap overview' },
-            colorscale: { value: 'clustal', label: 'Clustal' },
+            overview: {value: 'heatmap', label: 'Heatmap overview'},
+            colorscale: {value: 'clustal', label: 'Clustal'},
             visualizations: [
-                { value: 'showconservation', label: 'Show conservation weights' },
-                { value: 'showgap', label: 'Show gap weights' },
-                { value: 'showlabel', label: 'Show labels' },
-                { value: 'showid', label: 'Show ID' },
-                { value: 'showconsensus', label: 'Show consensus' }
+                {value: 'showconservation', label: 'Show conservation weights'},
+                {value: 'showgap', label: 'Show gap weights'},
+                {value: 'showlabel', label: 'Show labels'},
+                {value: 'showid', label: 'Show ID'},
+                // { value: 'showconsensus', label: 'Show consensus' }
             ],
         }
     }
 
     handleSelect = (key) => (event) => {
-        this.setState({ [key]: event });
+        this.setState({[key]: event});
     }
 
     render() {
@@ -56,7 +56,7 @@ export default class AlignmentViewer extends PureComponent {
             showconsensus: preshowconsensus,
             ...other
         } = this.props;
-        const { colorscale, overview, visualizations } = this.state;
+        const {colorscale, overview, visualizations} = this.state;
 
         // Parse state
         const colorscaleVal = colorscale.value;
@@ -80,18 +80,21 @@ export default class AlignmentViewer extends PureComponent {
                 >
                     <DropdownSelect
                         outerStyle={{width: '25%'}}
-                        caption={'Select colorscale'}
+                        caption={'Seleccione la escala de color'}
                         value={colorscale}
                         onChange={this.handleSelect('colorscale')}
                         options={COLORSCALE_OPTIONS}
                     />
-                    <DropdownSelect
+                    {/* eslint-disable-next-line no-inline-comments */}
+                    {/* <DropdownSelect
                         outerStyle={{width: '25%'}}
                         caption={'Select overview'}
                         value={overview}
                         onChange={this.handleSelect('overview')}
                         options={OVERVIEW_OPTIONS}
-                    />
+                    /> */}
+                    {/* eslint-disable-next-line no-inline-comments */}
+                    {/*
                     <DropdownSelect
                         outerStyle={{width: '75%'}}
                         caption={'Toggle visualizations'}
@@ -100,6 +103,7 @@ export default class AlignmentViewer extends PureComponent {
                         options={VISUALIZATION_OPTIONS}
                         isMulti={true}
                     />
+                    */}
                 </div>
                 <AlignmentChart
                     data={data}
