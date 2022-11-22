@@ -349,8 +349,8 @@ AlignmentViewer.defaultProps = {
     colorscale: 'clustal2',
     opacity: null,
     textcolor: null,
-    textsize: 10,
-    // textsize: 50,
+    // textsize: 10,
+    textsize: 25,
     showlabel: true,
     showid: true,
     showconservation: true,
@@ -366,14 +366,15 @@ AlignmentViewer.defaultProps = {
     groupbars: false,
     showconsensus: true,
     // Layout
-    tilewidth: 16,
-    tileheight: 16,
+    tilewidth: 32,
+    tileheight: 32,
     numtiles: null,
     overview: 'heatmap',
-    scrollskip: 10,
+    scrollskip: 20,
     tickstart: null,
     ticksteps: null,
     // Other
     width: null,
-    height: 900
+    // height: 900
+    height: 450
 };

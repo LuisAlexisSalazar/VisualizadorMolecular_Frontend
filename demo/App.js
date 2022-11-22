@@ -10,13 +10,13 @@ import dataset4 from './data/1534023160.fasta';
 import axios from "axios";
 
 
-const DATA = {
-    dataset0,
-    dataset1,
-    dataset2,
-    dataset3,
-    dataset4
-};
+// const DATA = {
+//     dataset0,
+//     dataset1,
+//     dataset2,
+//     dataset3,
+//     dataset4
+// };
 
 
 export default class App extends Component {
@@ -35,6 +35,14 @@ export default class App extends Component {
             value: [dataset0],
             type_algorithm: 'global',
             backtracking: false,
+            type_string1: "ADN",
+            type_string2: "ADN",
+            len_string1: 7,
+            len_string2: 7,
+            score: 1,
+            types_strings: [],
+            center_string: ""
+
         };
         this.setProps = this.setProps.bind(this);
         this.handleDataChange = this.handleDataChange.bind(this);
@@ -119,6 +127,15 @@ export default class App extends Component {
         axios.post(baseURL + extend_url, data_to_send).then(
             res => {
                 const alignments = res.data.alignments;
+                this.setState({type_string1: res.data.type_string1});
+                this.setState({type_string2: res.data.type_string2});
+                this.setState({len_string1: res.data.len_string1});
+                this.setState({type_string1: res.data.type_string1});
+                this.setState({score: res.data.score});
+                this.setState({types_strings: res.data.types_strings});
+                this.setState({center_string: res.data.center_string});
+
+
                 if (type_algorithm === "global") {
                     let index = 0
 
@@ -144,8 +161,7 @@ export default class App extends Component {
                     }
                     result_in_format_fast.push(subsequence)
 
-                }
-                else if (type_algorithm==="star"){
+                } else if (type_algorithm === "star") {
                     // console.log(res.data)
                     let index = 0
                     let subsequence = ""
@@ -211,7 +227,12 @@ export default class App extends Component {
             string5,
             value,
             backtracking,
-            amountInputsExtra
+            amountInputsExtra,
+            type_string1,
+            type_string2,
+            len_string1,
+            len_string2,
+            score, types_strings,center_string
         } = this.state;
         return (
             <div
@@ -279,6 +300,31 @@ export default class App extends Component {
                         Ejecutar
                     </button>
                 </div>
+                <div style={{
+                    padding: 16,
+                    marginBottom: 32,
+                    background: "#FFFFFF"
+                }}>
+                    {type_algorithm !== "star" &&
+                    <div>
+                        <h2>Información adicional</h2>
+                        <p> Tipo de la cadena 1: {type_string1}</p>
+                        <p> Tipo de la cadena 2: {type_string2}</p>
+                        <p> Tamaño de la cadena 1: {len_string1}</p>
+                        <p> Tamaño de la cadena 2: {len_string2}</p>
+                        <p> Score: {score}</p>
+                    </div>}
+
+                    {type_algorithm === "star" &&
+                        types_strings.map((item, index) => {
+                            return <p> Tipo de la cadena {index}: {item} </p>
+
+                        })
+                    }
+                    {type_algorithm === "star" && <p> Cadena Central: {center_string} </p>}
+                </div>
+
+
                 <div>
                     {/* eslint-disable-next-line no-unused-vars */}
                     {value.map((item, index) => {
