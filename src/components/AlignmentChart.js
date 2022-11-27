@@ -1,13 +1,13 @@
-import React, { PureComponent } from 'react';
+import React, {PureComponent} from 'react';
 import PropTypes from 'prop-types';
 
 import _ from 'lodash';
 import Plot from 'react-plotly.js';
 
-import { importSequences, parseSequences, mergeSequences } from './sequences';
-import { getEntropy, getConservation } from './metrics'
-import { getWidth, getHovertext, getTicks, SUBPLOT_RATIOS } from './charting';
-import { getColorscale } from './colormaker';
+import {importSequences, parseSequences, mergeSequences} from './sequences';
+import {getEntropy, getConservation} from './metrics'
+import {getWidth, getHovertext, getTicks, SUBPLOT_RATIOS} from './charting';
+import {getColorscale} from './colormaker';
 
 
 /**
@@ -74,7 +74,7 @@ export default class AlignmentChart extends PureComponent {
             numtiles = 50;
         }
 
-        return { xStart: -0.5, xEnd: numtiles + 0.5 };
+        return {xStart: -0.5, xEnd: numtiles + 0.5};
     }
 
     handleSelect(event) {
@@ -184,19 +184,22 @@ export default class AlignmentChart extends PureComponent {
 
         // Fill sequence gaps if any
         const length = _.maxBy(sequences, (sequence => sequence.seq.length)).seq.length;
-        let { sequencesArray, sequencesInfo } = parseSequences(sequences, length);
+        let {sequencesArray, sequencesInfo} = parseSequences(sequences, length);
 
         const sequencesTranspose = _.zip(...sequencesArray);
         const preCount = sequencesInfo.length;
 
         // Make consensus sequence
-        ({ sequencesArray, sequencesInfo } = mergeSequences(sequencesTranspose, sequencesArray, sequencesInfo, showconsensus));
+        ({
+            sequencesArray,
+            sequencesInfo
+        } = mergeSequences(sequencesTranspose, sequencesArray, sequencesInfo, showconsensus));
         const count = sequencesInfo.length;
 
         // TODO export to main plot
 
         // Get colorscale
-        const { colormap, colorscale, textcolor, opacity } = getColorscale(inputColorscale, inputTextColor, inputOpacity);
+        const {colormap, colorscale, textcolor, opacity} = getColorscale(inputColorscale, inputTextColor, inputOpacity);
 
         // Get heatmap z, and annotations x, y, text, hoverText
         const z = sequencesArray.map(sequenceText =>
@@ -210,7 +213,7 @@ export default class AlignmentChart extends PureComponent {
         const hoverText = getHovertext(sequencesArray, sequencesInfo);
 
         // Get labels, tick
-        const { labels, tick } = getTicks(sequencesInfo, showlabel, showid);
+        const {labels, tick} = getTicks(sequencesInfo, showlabel, showid);
 
         // return { sequencesInfo, sequencesArray };
 
@@ -220,7 +223,7 @@ export default class AlignmentChart extends PureComponent {
         let gapBars = false;
         let maxEntropy = 0;
 
-        if (showconservation)  {
+        if (showconservation) {
             conservationBars = sequencesTranspose.map((sequenceTranspose) => {
                 let val;
 
@@ -229,7 +232,7 @@ export default class AlignmentChart extends PureComponent {
                     if (val > maxEntropy) {
                         maxEntropy = val;
                     }
-                }  else {
+                } else {
                     val = getConservation(sequenceTranspose);
                 }
 
@@ -237,15 +240,15 @@ export default class AlignmentChart extends PureComponent {
             });
 
             if (conservationmethod === 'entropy') {
-                conservationBars = conservationBars.map(conservationBar => (1 - conservationBar/maxEntropy));
+                conservationBars = conservationBars.map(conservationBar => (1 - conservationBar / maxEntropy));
             } else {
-                conservationBars = conservationBars.map(conservationBar => conservationBar/preCount);
+                conservationBars = conservationBars.map(conservationBar => conservationBar / preCount);
             }
         }
 
         if (showgap) {
             gapBars = sequencesTranspose.map(sequenceTranspose =>
-                _.countBy(sequenceTranspose)['-']/preCount
+                _.countBy(sequenceTranspose)['-'] / preCount
             );
         }
 
@@ -336,10 +339,12 @@ export default class AlignmentChart extends PureComponent {
                 y: gapBars,
                 marker: {
                     color: gapcolor,
+                    // color: 'red',
                     opacity: gapopacity
                 },
                 yaxis: `y${plotCount}`,
             }
+            // console.log(gapcolorscale)
             if (gapcolorscale) {
                 dataArr.marker.color = gapBars;
                 dataArr.marker.colorscale = gapcolorscale;
@@ -347,12 +352,11 @@ export default class AlignmentChart extends PureComponent {
             }
             data.push(dataArr);
         }
-
-        return { data, length, count, labels, tick, plotCount };
+        return {data, length, count, labels, tick, plotCount};
     };
 
     // Fetch layout
-    getLayout({ length, count, labels, tick, plotCount }) {
+    getLayout({length, count, labels, tick, plotCount}) {
         const {
             tilewidth,
             tileheight,
@@ -364,7 +368,8 @@ export default class AlignmentChart extends PureComponent {
             width: inputWidth,
             height: inputHeight,
         } = this.props;
-        const { xStart, xEnd, dragmode } = this.state;
+
+        const {xStart, xEnd, dragmode} = this.state;
 
         // Initial width and range handled by constructor
         const initialRange = [xStart, xEnd];
@@ -423,7 +428,7 @@ export default class AlignmentChart extends PureComponent {
         }
 
         // Get layout
-        const layout =  {
+        const layout = {
             hovermode: 'closest',
             dragmode: dragmode || 'pan',
             showlegend: false,
@@ -442,7 +447,7 @@ export default class AlignmentChart extends PureComponent {
                 autorange: 'reversed',
                 automargin: true
             },
-            margin: { t: 20, r: 20 },
+            margin: {t: 20, r: 20},
         };
 
         // Append secondary plots
@@ -458,18 +463,21 @@ export default class AlignmentChart extends PureComponent {
         } else if (plotCount === 3) {
             layout.yaxis.domain = [0.0, 0.64];
             layout.yaxis2 = {
-                title: '<b>Conservation</b>',
+                title: '<b>Conservación</b>',
                 titlefont: {size: 12},
                 showgrid: false,
                 zeroline: false,
-                domain: [0.65, 0.89]
+                domain: [0.65, 0.80]
+                // domain: [0.5, 0.7]
             };
             layout.yaxis3 = {
                 title: '<b>Gap</b>',
                 titlefont: {size: 12},
                 showgrid: false,
                 zeroline: false,
-                domain: [0.90, 1]
+                domain: [0.85, 1]
+                // domain: [0.8, 1]
+                // domain: [-1, 0.89]
             };
         } else {
             layout.yaxis.domain = [0.0, 1.0];
@@ -477,10 +485,10 @@ export default class AlignmentChart extends PureComponent {
 
         // Get overview plot
         if (overview === 'heatmap') {
-            layout.xaxis.rangeslider = { autorange: true };
+            layout.xaxis.rangeslider = {autorange: true};
             layout.xaxis.tick0 = tickstart;
             layout.xaxis.dtick = ticksteps;
-            layout.margin = { t: 20, r: 20, b: 20 };
+            layout.margin = {t: 20, r: 20, b: 20};
         } else if (overview === 'slider') {
             layout.sliders = [{
                 // Wrap in bold hack
@@ -490,30 +498,30 @@ export default class AlignmentChart extends PureComponent {
         } else {
             layout.xaxis.tick0 = tickstart;
             layout.xaxis.dtick = ticksteps;
-            layout.margin = { t: 20, r: 20, b: 20 };
+            layout.margin = {t: 20, r: 20, b: 20};
         }
 
-        return { layout, width, height };
+        return {layout, width, height};
     };
 
     // Set xStart and xEnd on load
     componentDidMount() {
-        const { xStart, xEnd } = this.resetWindowing(this.props);
-        this.setState({ xStart, xEnd });
+        const {xStart, xEnd} = this.resetWindowing(this.props);
+        this.setState({xStart, xEnd});
     }
 
     // Reset xStart and xEnd on data change
     componentDidUpdate(prevProps, prevState) {
         if (this.props.data !== prevProps.data) {
-            const { xStart, xEnd } = this.resetWindowing(this.props);
-            this.setState({ xStart, xEnd });
+            const {xStart, xEnd} = this.resetWindowing(this.props);
+            this.setState({xStart, xEnd});
         }
     }
 
     // Main
     render() {
-        const { data, length, count, labels, tick, plotCount } = this.getData();
-        const { layout, width, height } = this.getLayout({ length, count, labels, tick, plotCount });
+        const {data, length, count, labels, tick, plotCount} = this.getData();
+        const {layout, width, height} = this.getLayout({length, count, labels, tick, plotCount});
 
         const other = {
             style: {
@@ -770,22 +778,26 @@ AlignmentChart.defaultProps = {
     extension: 'fasta',
     colorscale: 'clustal2',
     opacity: null,
+    // textcolor: null,
     textcolor: null,
-    textsize: 10,
-    // textsize: 100,
+    textsize: 50,
     showlabel: true,
     showid: true,
     showconservation: true,
     conservationcolor: null,
-    conservationcolorscale: 'Viridis',
+    conservationcolorscale: null,
     conservationopacity: null,
     conservationmethod: 'entropy',
-    correctgap: true,
+    correctgap: false,
     showgap: true,
-    gapcolor: 'grey',
+    // gapcolor: 'red',
+    // Solo para la barra
+    gapcolor: 'red',
     gapcolorscale: null,
+    // gapcolorscale: 'cinema',
     gapopacity: null,
     groupbars: false,
+    // groupbars: true,
     showconsensus: true,
     // Layout
     tilewidth: 16,

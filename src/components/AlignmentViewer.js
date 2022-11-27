@@ -30,6 +30,7 @@ export default class AlignmentViewer extends PureComponent {
         this.state = {
             overview: {value: 'heatmap', label: 'Heatmap overview'},
             colorscale: {value: 'clustal', label: 'Clustal'},
+
             visualizations: [
                 {value: 'showconservation', label: 'Show conservation weights'},
                 {value: 'showgap', label: 'Show gap weights'},
@@ -74,6 +75,7 @@ export default class AlignmentViewer extends PureComponent {
         } = getVisualizations(visualizationsVal);
 
         return (
+
             <div>
                 <div
                     style={{display: 'flex'}}
@@ -86,15 +88,14 @@ export default class AlignmentViewer extends PureComponent {
                         options={COLORSCALE_OPTIONS}
                     />
                     {/* eslint-disable-next-line no-inline-comments */}
-                    {/* <DropdownSelect
+                    {/*
+                    <DropdownSelect
                         outerStyle={{width: '25%'}}
                         caption={'Select overview'}
                         value={overview}
                         onChange={this.handleSelect('overview')}
-                        options={OVERVIEW_OPTIONS}
-                    /> */}
-                    {/* eslint-disable-next-line no-inline-comments */}
-                    {/*
+                        options={OVERVIEW_OPTIONS}/>
+
                     <DropdownSelect
                         outerStyle={{width: '75%'}}
                         caption={'Toggle visualizations'}
@@ -104,7 +105,9 @@ export default class AlignmentViewer extends PureComponent {
                         isMulti={true}
                     />
                     */}
+
                 </div>
+
                 <AlignmentChart
                     data={data}
                     colorscale={colorscaleVal}
@@ -120,7 +123,7 @@ export default class AlignmentViewer extends PureComponent {
         );
     }
 }
-
+// {...other}
 
 AlignmentViewer.propTypes = {
 
@@ -348,33 +351,44 @@ AlignmentViewer.defaultProps = {
     extension: 'fasta',
     colorscale: 'clustal2',
     opacity: null,
-    textcolor: null,
+    textcolor: 'black',
     // textsize: 10,
-    textsize: 25,
+    textsize: 15,
     showlabel: true,
     showid: true,
     showconservation: true,
-    conservationcolor: null,
-    conservationcolorscale: 'Viridis',
+    // conservationcolor: null,
+    conservationcolor: '779ECB',
+    // conservationcolorscale: 'Viridis',
+    // conservationcolorscale: 'Greens',
+    // conservationcolorscale: 'Aggrnyl',
+    // conservationcolorscale: 'Mae',
+    conservationcolorscale: null,
+
+    // conservationcolorscale: null,
     conservationopacity: null,
     conservationmethod: 'entropy',
+    // conservationmethod: null,
     correctgap: true,
     showgap: true,
-    gapcolor: 'grey',
+    gapcolor: 'FF6961',
+    // gapcolor: null,
     gapcolorscale: null,
+    // gapcolorscale: 'clustal2',
     gapopacity: null,
     groupbars: false,
     showconsensus: true,
     // Layout
-    tilewidth: 32,
-    tileheight: 32,
+    tilewidth: 16,
+    tileheight: 16,
     numtiles: null,
     overview: 'heatmap',
-    scrollskip: 20,
+    scrollskip: 35,
     tickstart: null,
     ticksteps: null,
     // Other
     width: null,
     // height: 900
-    height: 450
+    height: 650
+    // height: 700
 };

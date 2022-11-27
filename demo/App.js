@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {AlignmentChart, AlignmentViewer} from '../src/index';
 
-import dataset1 from './data/sample.fasta';
-import dataset2 from './data/p53.fasta';
-import dataset3 from './data/p53_clustalo.fasta';
+// import dataset1 from './data/sample.fasta';
+// import dataset2 from './data/p53.fasta';
+// import dataset3 from './data/p53_clustalo.fasta';
 import dataset0 from './data/simple_sample.fasta';
 // import dataset4 from '../data/p53_clustalo.clustal';
-import dataset4 from './data/1534023160.fasta';
+// import dataset4 from './data/1534023160.fasta';
 import axios from "axios";
 
 
@@ -17,8 +17,10 @@ import axios from "axios";
 //     dataset3,
 //     dataset4
 // };
-
-
+// ?Explicación de la esquema de colores como estandares
+// https://www.jalview.org/help/html/colourSchemes/
+// ?Github del esquema implementado
+// https://github.com/plotly/react-msa-viewer
 export default class App extends Component {
 
     constructor(props) {
@@ -217,6 +219,7 @@ export default class App extends Component {
 
 
     render() {
+        console.log(dataset0);
         const {
             type_algorithm,
             events,
@@ -232,7 +235,7 @@ export default class App extends Component {
             type_string2,
             len_string1,
             len_string2,
-            score, types_strings,center_string
+            score, types_strings, center_string
         } = this.state;
         return (
             <div
@@ -316,10 +319,10 @@ export default class App extends Component {
                     </div>}
 
                     {type_algorithm === "star" &&
-                        types_strings.map((item, index) => {
-                            return <p> Tipo de la cadena {index}: {item} </p>
+                    types_strings.map((item, index) => {
+                        return <p> Tipo de la cadena {index}: {item} </p>
 
-                        })
+                    })
                     }
                     {type_algorithm === "star" && <p> Cadena Central: {center_string} </p>}
                 </div>
@@ -334,36 +337,10 @@ export default class App extends Component {
                             onChange={this.handlePlotChange}
                         />
                     })}
-                    {/* eslint-disable-next-line no-inline-comments */}
-                    {/*
-                    <AlignmentViewer
-                        data={value}
-                        extension='fasta'
-                        onChange={this.handlePlotChange}
-                    />
-                    */}
+
                 </div>
-                <div
-                    style={{
-                        padding: 16,
-                        marginTop: 16,
-                        background: "#FFFFFF"
-                    }}
-                >
-                    <p>
-                        Events:
-                    </p>
-                    <textarea
-                        style={{
-                            width: '100%',
-                            height: 200,
-                            fontSize: '14px'
-                        }}
-                        value={events.join('\n')}
-                        readOnly
-                    >
-                    </textarea>
-                </div>
+
+
             </div>
         );
     }
