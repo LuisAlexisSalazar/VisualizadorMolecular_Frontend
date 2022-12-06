@@ -80,6 +80,8 @@ export default class AlignmentViewer extends PureComponent {
                 <div
                     style={{display: 'flex'}}
                 >
+                    {/* eslint-disable-next-line no-inline-comments */}
+                    {/* }
                     <DropdownSelect
                         outerStyle={{width: '25%'}}
                         caption={'Seleccione la escala de color'}
@@ -87,8 +89,7 @@ export default class AlignmentViewer extends PureComponent {
                         onChange={this.handleSelect('colorscale')}
                         options={COLORSCALE_OPTIONS}
                     />
-                    {/* eslint-disable-next-line no-inline-comments */}
-                    {/*
+                  
                     <DropdownSelect
                         outerStyle={{width: '25%'}}
                         caption={'Select overview'}
